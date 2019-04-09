@@ -1,0 +1,17 @@
+root = true
+
+[*]
+end_of_line = lf
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[{src,scripts}/**.{ts,json,js}]
+continuation_indent_size = 4
+curly_bracket_next_line = false
+indent_brace_style = BSD KNF
+indent_size = 4
+indent_style = space
+max_line_length = 140
+spaces_around_brackets = outside
+spaces_around_operators = true
