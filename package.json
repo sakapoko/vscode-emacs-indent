@@ -2,7 +2,7 @@
 	"name": "vscode-emacs-indent",
 	"displayName": "vscode-emacs-indent",
 	"description": "emacs like indent",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"publisher": "sakapoko",
 	"repository": {
 		"type": "git",
@@ -41,10 +41,10 @@
 		"test": "npm run compile && node ./node_modules/vscode/bin/test"
 	},
 	"devDependencies": {
-		"typescript": "^3.3.1",
-		"vscode": "^1.1.28",
-		"tslint": "^5.12.1",
-		"@types/node": "^10.12.21",
-		"@types/mocha": "^2.2.42"
+		"@types/mocha": "^2.2.42",
+		"@types/node": "^10.17.56",
+		"tslint": "^5.20.1",
+		"typescript": "^3.9.9",
+		"vscode": "^1.1.37"
 	}
 }

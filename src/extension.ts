@@ -27,21 +27,25 @@ function getCurrentLine(editor: vscode.TextEditor): string {
 function reindentCurrentLine(editor: vscode.TextEditor) {
     let position = editor.selection.active;
     let currentLine = getCurrentLine(editor);
+
+    if (position.line > 0 && editor.document.lineAt(position.line - 1).isEmptyOrWhitespace) {
+        let s = position.line - 1
+        while (editor.document.lineAt(s).isEmptyOrWhitespace) {
+            --s;
+        }
+        editor.selection = new vscode.Selection(position.with(s, 0), position.with(position.line + 1, 0));
+    }
     vscode.commands.executeCommand('editor.action.reindentselectedlines').then(val => {
+        editor.selection = new vscode.Selection(position, position);
         let offset = currentLine.length - position.character; // position from right
         if (offset < currentLine.trimLeft().length) {
             currentLine = getCurrentLine(editor);
-            const newPosition = position.with(position.line, currentLine.length - offset);
-            const newSelection = new vscode.Selection(newPosition, newPosition);
-            editor.selection = newSelection;
+            position = position.with(position.line, currentLine.length - offset);
         } else {
             currentLine = getCurrentLine(editor);
             offset = currentLine.length - currentLine.trim().length; // indent size
-            if (offset > position.character) {
-                const newPosition = position.with(position.line, offset - 1);
-                const newSelection = new vscode.Selection(newPosition, newPosition);
-                editor.selection = newSelection;
-            }
+            position = position.with(position.line, offset - 1);
         }
+        editor.selection = new vscode.Selection(position, position);
     });
 }
