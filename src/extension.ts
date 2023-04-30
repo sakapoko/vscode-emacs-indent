@@ -2,7 +2,7 @@
 import * as vscode from 'vscode';
 
 export function activate(context: vscode.ExtensionContext) {
-    let disposable = vscode.commands.registerTextEditorCommand('emacs-indent.reindentCurrentLine', () => {
+    const disposable = vscode.commands.registerTextEditorCommand('emacs-indent.reindentCurrentLine-v2', () => {
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
             vscode.window.showInformationMessage('No editor');
@@ -16,7 +16,11 @@ export function activate(context: vscode.ExtensionContext) {
     });
     context.subscriptions.push(disposable);
 }
-export function deactivate() { }
+
+export function deactivate(): undefined {
+    console.log("Deactivated extension");
+    return undefined;
+}
 
 function getCurrentLine(editor: vscode.TextEditor): string {
     const position = editor.selection.active;
@@ -24,18 +28,26 @@ function getCurrentLine(editor: vscode.TextEditor): string {
     return editor.document.getText(range);
 }
 
+// function getLineCount(editor: vscode.TextEditor): number {
+//     const range = editor.selection;
+//     const beg = range.start.line;
+//     const end = range.end.line;
+//     if (end < beg) {
+//         return beg - end + 1;
+//     }
+//     return end - beg + 1;
+//}
+
 function reindentCurrentLine(editor: vscode.TextEditor) {
     let position = editor.selection.active;
     let currentLine = getCurrentLine(editor);
-
-    if (position.line > 0 && editor.document.lineAt(position.line - 1).isEmptyOrWhitespace) {
-        let s = position.line - 1
-        while (editor.document.lineAt(s).isEmptyOrWhitespace) {
-            --s;
-        }
-        editor.selection = new vscode.Selection(position.with(s, 0), position.with(position.line + 1, 0));
-    }
-    vscode.commands.executeCommand('editor.action.reindentselectedlines').then(val => {
+    // const numLines = getLineCount(editor);
+    // if (numLines === 1) {
+    //     editor.selection = new vscode.Selection(position.with(position.line, 0), position.with(position.line, 0));        
+    // }
+    // reindentselectedlines does not work in some documents
+    // formatDocument works in every case I tried (c, cpp, js, ts, json)
+    vscode.commands.executeCommand('editor.action.formatDocument').then(val => {
         editor.selection = new vscode.Selection(position, position);
         let offset = currentLine.length - position.character; // position from right
         if (offset < currentLine.trimLeft().length) {
