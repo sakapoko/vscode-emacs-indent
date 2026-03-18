@@ -29,7 +29,7 @@
 			{
 				"key": "tab",
 				"command": "emacs-indent.reindentCurrentLine",
-				"when": "editorTextFocus"
+				"when": "editorTextFocus && !(inlineSuggestionVisible || suggestWidgetVisible)"
 			}
 		]
 	},
