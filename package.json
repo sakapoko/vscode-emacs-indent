@@ -2,20 +2,17 @@
 	"name": "vscode-emacs-indent",
 	"displayName": "vscode-emacs-indent",
 	"description": "emacs like indent",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"publisher": "sakapoko",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/sakapoko/vscode-emacs-indent.git"
 	},
 	"engines": {
-		"vscode": "^1.33.0"
+		"vscode": "^1.85.0"
 	},
 	"categories": [
 		"Other"
-	],
-	"activationEvents": [
-		"onCommand:emacs-indent.reindentCurrentLine"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -29,7 +26,7 @@
 			{
 				"key": "tab",
 				"command": "emacs-indent.reindentCurrentLine",
-				"when": "editorTextFocus && !(inlineSuggestionVisible || suggestWidgetVisible)"
+				"when": "editorTextFocus && !editorReadonly && !inSnippetMode && !(inlineSuggestionVisible || suggestWidgetVisible)"
 			}
 		]
 	},
@@ -37,14 +34,22 @@
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
-		"postinstall": "node ./node_modules/vscode/bin/install",
-		"test": "npm run compile && node ./node_modules/vscode/bin/test"
+		"lint": "eslint src --ext .ts",
+		"lint:fix": "eslint src --ext .ts --fix",
+		"test": "npm run compile && node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/mocha": "^2.2.42",
-		"@types/node": "^10.17.56",
-		"tslint": "^5.20.1",
-		"typescript": "^3.9.9",
-		"vscode": "^1.1.37"
+		"@eslint/js": "^10.0.1",
+		"@types/mocha": "^10.0.10",
+		"@types/node": "^25.5.0",
+		"@types/vscode": "^1.85.0",
+		"@typescript-eslint/eslint-plugin": "^8.57.1",
+		"@typescript-eslint/parser": "^8.57.1",
+		"@vscode/test-electron": "^2.5.2",
+		"eslint": "^10.0.3",
+		"glob": "^13.0.6",
+		"globals": "^17.4.0",
+		"mocha": "^11.7.5",
+		"typescript": "^5.9.3"
 	}
 }
