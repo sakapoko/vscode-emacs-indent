@@ -2,7 +2,7 @@
 import * as vscode from 'vscode';
 
 export function activate(context: vscode.ExtensionContext) {
-    let disposable = vscode.commands.registerTextEditorCommand('emacs-indent.reindentCurrentLine', () => {
+    const disposable = vscode.commands.registerTextEditorCommand('emacs-indent.reindentCurrentLine', () => {
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
             vscode.window.showInformationMessage('No editor');
@@ -29,16 +29,17 @@ function reindentCurrentLine(editor: vscode.TextEditor) {
     let currentLine = getCurrentLine(editor);
 
     if (position.line > 0 && editor.document.lineAt(position.line - 1).isEmptyOrWhitespace) {
-        let s = position.line - 1
+        let s = position.line - 1;
         while (editor.document.lineAt(s).isEmptyOrWhitespace) {
             --s;
         }
+        if (s < 0) { s = 0; }
         editor.selection = new vscode.Selection(position.with(s, 0), position.with(position.line + 1, 0));
     }
-    vscode.commands.executeCommand('editor.action.reindentselectedlines').then(val => {
+    vscode.commands.executeCommand('editor.action.reindentselectedlines').then(() => {
         editor.selection = new vscode.Selection(position, position);
         let offset = currentLine.length - position.character; // position from right
-        if (offset < currentLine.trimLeft().length) {
+        if (offset < currentLine.trimStart().length) {
             currentLine = getCurrentLine(editor);
             position = position.with(position.line, currentLine.length - offset);
         } else {
